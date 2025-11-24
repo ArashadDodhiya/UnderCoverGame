@@ -1,26 +1,146 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 230 35% 7%;
+    --foreground: 213 100% 96%;
+
+    --card: 230 35% 10%;
+    --card-foreground: 213 100% 96%;
+
+    --popover: 230 35% 7%;
+    --popover-foreground: 213 100% 96%;
+
+    --primary: 180 93% 61%;
+    --primary-foreground: 230 35% 10%;
+
+    --secondary: 283 100% 76%;
+    --secondary-foreground: 230 35% 10%;
+
+    --muted: 228 21% 18%;
+    --muted-foreground: 217 24% 78%;
+
+    --accent: 283 100% 76%;
+    --accent-foreground: 230 35% 10%;
+
+    --border: 220 18% 22%;
+    --input: 220 18% 22%;
+    --ring: 180 93% 61%;
+
+    --radius: 1rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    min-height: 100vh;
+  }
+}
+
+.game-bg {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.game-bg::before,
+.game-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+}
+
+.game-bg::before {
+  background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.35), transparent 50%),
+    radial-gradient(circle at 80% 10%, rgba(168, 85, 247, 0.35), transparent 55%),
+    radial-gradient(circle at 50% 80%, rgba(248, 113, 113, 0.35), transparent 50%);
+  filter: blur(30px);
+  animation: bloom 18s ease-in-out infinite alternate;
+}
+
+.game-bg::after {
+  background-image: linear-gradient(transparent, rgba(15, 23, 42, 0.6)),
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 100% 100%, 180px 180px;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+@keyframes bloom {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes floaty {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 30px rgba(14, 165, 233, 0.25);
+  }
+
+  100% {
+    box-shadow: 0 0 60px rgba(14, 165, 233, 0.45);
+  }
+}
+
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow:
+    0 20px 45px rgba(2, 6, 23, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(18px);
+}
+
+.neon-border {
+  position: relative;
+}
+
+.neon-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(130deg, rgba(34, 211, 238, 0.6), rgba(168, 85, 247, 0.6));
+  mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.retro-label {
+  font-family: var(--font-display), "Press Start 2P", monospace;
+  letter-spacing: 0.1em;
 }
