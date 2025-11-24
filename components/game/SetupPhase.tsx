@@ -78,11 +78,14 @@ export default function SetupPhase() {
         setError("");
         setLoading(true);
         try {
-            let words = queuedWords;
+            let words: WordPair | null = queuedWords;
             if (!words) {
                 const res = await fetch("/api/generate-words", { method: "POST" });
                 if (!res.ok) throw new Error("Failed to generate new words");
-                words = await res.json();
+                words = (await res.json()) as WordPair;
+            }
+            if (!words) {
+                throw new Error("Word payload missing");
             }
             startGame(names, undercoverCount, mrWhiteCount, words);
             setQueuedWords(null);
