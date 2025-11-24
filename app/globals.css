@@ -6,33 +6,33 @@
   :root {
     --background: 230 35% 7%;
     --foreground: 213 100% 96%;
-
+ 
     --card: 230 35% 10%;
     --card-foreground: 213 100% 96%;
-
+ 
     --popover: 230 35% 7%;
     --popover-foreground: 213 100% 96%;
-
+ 
     --primary: 180 93% 61%;
     --primary-foreground: 230 35% 10%;
-
+ 
     --secondary: 283 100% 76%;
     --secondary-foreground: 230 35% 10%;
-
+ 
     --muted: 228 21% 18%;
     --muted-foreground: 217 24% 78%;
-
+ 
     --accent: 283 100% 76%;
     --accent-foreground: 230 35% 10%;
-
+ 
     --border: 220 18% 22%;
     --input: 220 18% 22%;
     --ring: 180 93% 61%;
-
+ 
     --radius: 1rem;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
@@ -138,7 +138,7 @@
   mask-composite: exclude;
   pointer-events: none;
   opacity: 0.8;
-}
+  }
 
 .retro-label {
   font-family: var(--font-display), "Press Start 2P", monospace;

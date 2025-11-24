@@ -28,8 +28,8 @@ export default function Home() {
           <Link href="/game" className="w-full sm:w-auto">
             <Button size="xl" className="w-full text-base sm:min-w-[220px] sm:text-lg">
               Launch Game
-            </Button>
-          </Link>
+          </Button>
+        </Link>
           <a
             href="https://en.wikipedia.org/wiki/Undercover_(party_game)"
             target="_blank"
@@ -38,7 +38,7 @@ export default function Home() {
           >
             learn the rules
           </a>
-        </div>
+      </div>
       </section>
     </main>
   );

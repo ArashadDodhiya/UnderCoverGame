@@ -1,127 +1,64 @@
 import { NextResponse } from "next/server";
-import groq from "@/lib/groq";
 import dbConnect from "@/lib/mongodb";
 import UsedWord from "@/models/UsedWord";
+import fs from 'fs/promises';
+import path from 'path';
 
 type WordPair = { citizen: string; undercover: string };
-
-const FALLBACK_WORDS: WordPair[] = [
-    { citizen: "pencil", undercover: "pen" },
-    { citizen: "coffee", undercover: "tea" },
-    { citizen: "wallet", undercover: "purse" },
-    { citizen: "keyboard", undercover: "piano" },
-    { citizen: "desert", undercover: "beach" },
-    { citizen: "helmet", undercover: "hat" },
-    { citizen: "panther", undercover: "tiger" },
-    { citizen: "mirror", undercover: "window" },
-    { citizen: "rocket", undercover: "missile" },
-    { citizen: "lantern", undercover: "lamp" },
-];
-
-const MAX_GROQ_ATTEMPTS = 3;
-const GROQ_TIMEOUT_MS = 8000;
 
 export async function POST() {
     try {
         await dbConnect();
-        const groqPair = await tryGroqGeneration();
-        if (groqPair) {
-            return NextResponse.json(groqPair);
+
+        // Read word pairs from JSON file
+        const filePath = path.join(process.cwd(), 'data', 'word-pairs.json');
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const allPairs: WordPair[] = JSON.parse(fileContent);
+
+        // Get used words from DB
+        // We only need to check if the pair has been used recently or at all.
+        // For 5000 pairs, we can probably just check if it exists in UsedWord.
+        // However, if we want to support "reshuffling" after all are used, we might need more logic.
+        // For now, let's just filter out used ones.
+
+        // Optimization: Instead of fetching ALL used words (which could be large), 
+        // we can pick a random pair and check if it's used, retry a few times.
+        // Or if the list is small (like now ~200), we can fetch all used and filter.
+        // Given the goal is 5000, fetching all might be heavy eventually, but for < 10000 it's fine.
+        // Let's try the "pick random and check" approach for scalability, 
+        // but "fetch all and filter" guarantees a unique one if available without infinite loops.
+
+        // Let's go with "Fetch all used" for now as it's robust for < 10k items.
+        const usedDocs = await UsedWord.find({}, { citizen: 1, undercover: 1 }).lean();
+        const usedSet = new Set(usedDocs.map(d => `${d.citizen.toLowerCase()}|${d.undercover.toLowerCase()}`));
+
+        // Filter available pairs
+        const availablePairs = allPairs.filter(p =>
+            !usedSet.has(`${p.citizen.toLowerCase()}|${p.undercover.toLowerCase()}`) &&
+            !usedSet.has(`${p.undercover.toLowerCase()}|${p.citizen.toLowerCase()}`) // Check reverse too just in case
+        );
+
+        if (availablePairs.length === 0) {
+            // Fallback: If all words used, maybe clear history or just pick random?
+            // For now, let's pick a random one from allPairs and log a warning.
+            console.warn("All word pairs have been used! Recycling words.");
+            const randomPair = allPairs[Math.floor(Math.random() * allPairs.length)];
+            // We don't save to UsedWord if we are recycling, or we do? 
+            // If we recycle, we probably shouldn't block it again immediately, so maybe we don't save or we clear DB?
+            // Let's just return it.
+            return NextResponse.json(randomPair);
         }
 
-        const fallbackPair = await getFallbackPair();
-        if (fallbackPair) {
-            return NextResponse.json(fallbackPair);
-        }
+        // Select random pair
+        const selectedPair = availablePairs[Math.floor(Math.random() * availablePairs.length)];
 
-        return NextResponse.json({ error: "Unable to generate fresh words" }, { status: 500 });
+        // Mark as used
+        await UsedWord.create(selectedPair);
+
+        return NextResponse.json(selectedPair);
+
     } catch (error) {
         console.error("Error generating words:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-}
-
-async function tryGroqGeneration(): Promise<WordPair | null> {
-    for (let attempt = 0; attempt < MAX_GROQ_ATTEMPTS; attempt++) {
-        try {
-            const pair = await withTimeout(generatePairFromGroq(), GROQ_TIMEOUT_MS);
-            if (await isUniquePair(pair)) {
-                await UsedWord.create(pair);
-                return pair;
-            }
-        } catch (error) {
-            console.warn(`Groq attempt ${attempt + 1} failed:`, error);
-        }
-    }
-    return null;
-}
-
-async function getFallbackPair(): Promise<WordPair | null> {
-    const choices = [...FALLBACK_WORDS];
-    while (choices.length) {
-        const index = Math.floor(Math.random() * choices.length);
-        const [candidate] = choices.splice(index, 1);
-        if (await isUniquePair(candidate)) {
-            await UsedWord.create(candidate);
-            return candidate;
-        }
-    }
-    return null;
-}
-
-async function generatePairFromGroq(): Promise<WordPair> {
-    const completion = await groq.chat.completions.create({
-        messages: [
-            {
-                role: "system",
-                content: `Generate a pair of similar but different nouns for the game Undercover.
-Difficulty: medium (daily objects, easy to describe).
-Return ONLY JSON in this format: {"citizen": "word1", "undercover": "word2"}.
-Do not include any other text.`,
-            },
-            {
-                role: "user",
-                content: "Generate a word pair.",
-            },
-        ],
-        model: "llama-3.3-70b-versatile",
-        response_format: { type: "json_object" },
-    });
-
-    const content = completion.choices[0]?.message?.content;
-    if (!content) {
-        throw new Error("Groq response missing content");
-    }
-
-    const parsed = JSON.parse(content);
-    return {
-        citizen: parsed.citizen,
-        undercover: parsed.undercover,
-    };
-}
-
-async function isUniquePair(pair: WordPair) {
-    const exists = await UsedWord.findOne({
-        $or: [
-            { citizen: pair.citizen, undercover: pair.undercover },
-            { citizen: pair.undercover, undercover: pair.citizen },
-        ],
-    }).lean();
-    return !exists;
-}
-
-function withTimeout<T>(promise: Promise<T>, ms: number) {
-    return new Promise<T>((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error("Groq timeout")), ms);
-        promise.then(
-            (value) => {
-                clearTimeout(timer);
-                resolve(value);
-            },
-            (error) => {
-                clearTimeout(timer);
-                reject(error);
-            }
-        );
-    });
 }
