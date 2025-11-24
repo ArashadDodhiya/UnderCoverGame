@@ -21,7 +21,7 @@ function PhaseStage() {
     const { phase } = useGame();
 
     return (
-        <div className="glass-panel neon-border w-full p-6 sm:p-10 animate-[floaty_14s_ease-in-out_infinite]">
+        <div className="glass-panel neon-border w-full p-4 sm:p-8 sm:animate-[floaty_14s_ease-in-out_infinite]">
             {phase === "setup" && <SetupPhase />}
             {phase === "reveal" && <RevealPhase />}
             {phase === "clue" && <CluePhase />}
@@ -37,26 +37,26 @@ function GameHud() {
     const phaseMeta = PHASE_COPY[phase] ?? { label: "Ready", hint: "Let's play" };
 
     return (
-        <header className="glass-panel neon-border flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+        <header className="glass-panel neon-border flex flex-col gap-4 p-4 sm:gap-6 sm:p-6 md:flex-row md:items-center md:justify-between">
             <div>
-                <p className="retro-label text-xs text-cyan-200/80">current phase</p>
-                <h1 className="text-3xl font-semibold uppercase tracking-wider text-white">
+                <p className="retro-label text-[0.65rem] text-cyan-200/80 sm:text-xs">current phase</p>
+                <h1 className="text-2xl font-semibold uppercase tracking-wide text-white sm:text-3xl">
                     {phaseMeta.label}
                 </h1>
-                <p className="text-sm text-slate-300/70">{phaseMeta.hint}</p>
+                <p className="text-xs text-slate-300/70 sm:text-sm">{phaseMeta.hint}</p>
             </div>
-            <div className="grid grid-cols-3 gap-3 text-center text-sm">
-                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-lg backdrop-blur-sm">
-                    <p className="text-[10px] uppercase tracking-[0.35em] text-slate-300/70">players</p>
-                    <p className="text-2xl font-semibold">{players.length}</p>
+            <div className="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 shadow-lg backdrop-blur-sm">
+                    <p className="text-[0.6rem] uppercase tracking-[0.35em] text-slate-300/70 sm:text-[10px]">players</p>
+                    <p className="text-xl font-semibold sm:text-2xl">{players.length}</p>
                 </div>
-                <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 shadow-lg">
-                    <p className="text-[10px] uppercase tracking-[0.35em] text-cyan-100/70">undercover</p>
-                    <p className="text-2xl font-semibold text-cyan-200">{undercoverCount}</p>
+                <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-3 py-3 shadow-lg">
+                    <p className="text-[0.6rem] uppercase tracking-[0.35em] text-cyan-100/70 sm:text-[10px]">undercover</p>
+                    <p className="text-xl font-semibold text-cyan-200 sm:text-2xl">{undercoverCount}</p>
                 </div>
-                <div className="rounded-2xl border border-fuchsia-400/20 bg-fuchsia-400/10 px-4 py-3 shadow-lg">
-                    <p className="text-[10px] uppercase tracking-[0.35em] text-fuchsia-100/70">mr. white</p>
-                    <p className="text-2xl font-semibold text-fuchsia-200">{mrWhiteCount}</p>
+                <div className="col-span-2 rounded-2xl border border-fuchsia-400/20 bg-fuchsia-400/10 px-3 py-3 shadow-lg sm:col-span-1">
+                    <p className="text-[0.6rem] uppercase tracking-[0.35em] text-fuchsia-100/70 sm:text-[10px]">mr. white</p>
+                    <p className="text-xl font-semibold text-fuchsia-200 sm:text-2xl">{mrWhiteCount}</p>
                 </div>
             </div>
         </header>
@@ -65,13 +65,13 @@ function GameHud() {
 
 function GameContent() {
     return (
-        <main className="relative min-h-screen overflow-hidden px-4 py-10 text-white sm:px-6 lg:px-10">
+        <main className="relative min-h-screen overflow-hidden px-3 py-6 text-white sm:px-6 sm:py-10 lg:px-10">
             <div className="absolute inset-0 -z-10 opacity-80">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(34,211,238,0.4),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(236,72,153,0.4),transparent_45%),radial-gradient(circle_at_50%_80%,rgba(248,113,113,0.35),transparent_50%)]" />
                 <div className="absolute inset-0 mix-blend-screen opacity-30 blur-3xl bg-[conic-gradient(from_90deg_at_50%_50%,rgba(34,211,238,0.3),rgba(168,85,247,0.3),rgba(14,165,233,0.3))]" />
             </div>
 
-            <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 sm:gap-6">
                 <GameHud />
                 <PhaseStage />
             </div>

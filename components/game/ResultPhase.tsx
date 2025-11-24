@@ -21,19 +21,19 @@ export default function ResultPhase() {
 
     if (!lastEliminatedPlayer) {
         return (
-            <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-12 text-center text-sm text-slate-300/80">
+            <div className="rounded-3xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-slate-300/80 sm:px-6 sm:py-12">
                 Waiting for the vote to resolve...
             </div>
         );
     }
 
     return (
-        <section className="space-y-8 text-center">
-            <div className={`rounded-3xl border border-white/15 bg-gradient-to-br ${roleAccent} p-8 shadow-2xl`}>
-                <p className="retro-label text-[10px] text-white/80">eliminated</p>
-                <h2 className="text-4xl font-semibold">{lastEliminatedPlayer.name}</h2>
-                <p className="mt-3 text-sm uppercase tracking-[0.3em] text-white/80">was</p>
-                <p className="text-3xl font-bold text-white">
+        <section className="space-y-6 text-center sm:space-y-8">
+            <div className={`rounded-3xl border border-white/15 bg-gradient-to-br ${roleAccent} p-6 shadow-2xl sm:p-8`}>
+                <p className="retro-label text-[0.65rem] text-white/80 sm:text-[10px]">eliminated</p>
+                <h2 className="text-3xl font-semibold sm:text-4xl">{lastEliminatedPlayer.name}</h2>
+                <p className="mt-3 text-xs uppercase tracking-[0.3em] text-white/80 sm:text-sm">was</p>
+                <p className="text-2xl font-bold text-white sm:text-3xl">
                     {lastEliminatedPlayer.role === "mr_white" ? "Mr. White" : lastEliminatedPlayer.role}
                 </p>
 
@@ -45,10 +45,10 @@ export default function ResultPhase() {
                 )}
             </div>
 
-            <Button className="w-full text-lg" size="xl" onClick={() => setPhase("clue")}>
+            <Button className="w-full text-sm sm:text-lg" size="xl" onClick={() => setPhase("clue")}>
                 Continue round
             </Button>
-            <p className="text-xs text-slate-400/80">If the lobby is ready, go back to clue mode until the next vote.</p>
+            <p className="text-[0.7rem] text-slate-400/80 sm:text-xs">If the lobby is ready, go back to clue mode until the next vote.</p>
         </section>
     );
 }

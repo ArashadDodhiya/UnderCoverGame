@@ -99,20 +99,20 @@ export default function SetupPhase() {
     };
 
     return (
-        <section className="space-y-10 text-white">
-            <div className="text-center space-y-3">
-                <p className="retro-label text-[11px] uppercase text-cyan-200/80">mission briefing</p>
-                <h2 className="text-3xl font-semibold">Assemble your squad</h2>
-                <p className="text-sm text-slate-300/80">
+        <section className="mx-auto w-full max-w-4xl space-y-8 text-white sm:space-y-10">
+            <div className="space-y-2 text-center sm:space-y-3">
+                <p className="retro-label text-[0.65rem] uppercase text-cyan-200/80 sm:text-[11px]">mission briefing</p>
+                <h2 className="text-2xl font-semibold sm:text-3xl">Assemble your squad</h2>
+                <p className="text-sm text-slate-300/80 sm:text-base">
                     Tune the lobby, name your agents, and let the AI forge a fresh secret word pair.
                 </p>
-                <p className="text-xs text-cyan-200/80">
+                <p className="text-xs text-cyan-200/80 sm:text-[0.8rem]">
                     {queuedWords ? "Word pair locked & cached" : prefetching ? "Synthesizing word pair..." : "Waiting for word pair"}
                 </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-6 rounded-3xl border border-white/5 bg-white/5 p-6 backdrop-blur">
+            <div className="grid gap-6 lg:grid-cols-2">
+                <div className="space-y-6 rounded-3xl border border-white/5 bg-white/5 p-5 backdrop-blur sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="retro-label text-[10px] text-slate-300/70">TOTAL PLAYERS</p>
@@ -151,11 +151,11 @@ export default function SetupPhase() {
                     </div>
                 </div>
 
-                <div className="rounded-3xl border border-white/5 bg-gradient-to-br from-slate-900/80 to-slate-900/50 p-6 backdrop-blur space-y-4">
+                <div className="space-y-4 rounded-3xl border border-white/5 bg-gradient-to-br from-slate-900/80 to-slate-900/50 p-5 backdrop-blur sm:p-6">
                     <p className="retro-label text-[10px] uppercase tracking-[0.35em] text-slate-400/70">
                         player aliases
                     </p>
-                    <div className="grid max-h-[360px] gap-3 overflow-y-auto pr-1">
+                    <div className="grid max-h-[45vh] gap-3 overflow-y-auto pr-0 sm:max-h-[360px] sm:pr-1">
                         {names.map((name, index) => (
                             <Input
                                 key={index}
@@ -203,21 +203,21 @@ export default function SetupPhase() {
 
 function CountBadge({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
     return (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400/80">{label}</p>
+        <div className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
+            <p className="text-[0.7rem] uppercase tracking-[0.3em] text-slate-400/80 sm:text-xs">{label}</p>
             <div className="flex items-center gap-3">
                 <button
                     type="button"
                     onClick={() => onChange(Math.max(0, value - 1))}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-xl transition hover:border-white/40"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-xl transition hover:border-white/40 sm:h-10 sm:w-10"
                 >
                     −
                 </button>
-                <p className="text-2xl font-semibold">{value}</p>
+                <p className="text-xl font-semibold sm:text-2xl">{value}</p>
                 <button
                     type="button"
                     onClick={() => onChange(value + 1)}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-xl transition hover:border-white/40"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-xl transition hover:border-white/40 sm:h-10 sm:w-10"
                 >
                     +
                 </button>

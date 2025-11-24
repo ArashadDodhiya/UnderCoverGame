@@ -29,19 +29,21 @@ export default function WinnerPhase() {
     };
 
     return (
-        <section className="space-y-8 text-center">
-            <div className="rounded-3xl border border-yellow-300/40 bg-gradient-to-br from-amber-500/20 via-yellow-400/20 to-slate-900/70 p-8 shadow-[0_25px_80px_rgba(245,158,11,0.35)]">
+        <section className="space-y-6 text-center sm:space-y-8">
+            <div className="rounded-3xl border border-yellow-300/40 bg-gradient-to-br from-amber-500/20 via-yellow-400/20 to-slate-900/70 p-6 shadow-[0_25px_80px_rgba(245,158,11,0.35)] sm:p-8">
                 <div className="flex items-center justify-center gap-3 text-yellow-200">
-                    <Trophy className="h-8 w-8" />
-                    <p className="retro-label text-[10px] uppercase tracking-[0.6em]">game over</p>
+                    <Trophy className="h-7 w-7 sm:h-8 sm:w-8" />
+                    <p className="retro-label text-[0.65rem] uppercase tracking-[0.6em] sm:text-[10px]">game over</p>
                 </div>
-                <h2 className="mt-4 text-4xl font-bold capitalize text-white">
+                <h2 className="mt-4 text-3xl font-bold capitalize text-white sm:text-4xl">
                     {winner === "citizen" ? "Citizens Victory" : "Impostors Triumph"}
                 </h2>
-                <p className="text-sm text-yellow-100/80">Roles revealed. Trust broken. Ready again?</p>
+                <p className="text-sm text-yellow-100/80">
+                    Roles revealed. Trust broken. Ready again?
+                </p>
 
-                <div className="mt-8 space-y-3 rounded-3xl border border-white/10 bg-white/10 px-6 py-4 text-left">
-                    <p className="text-xs uppercase tracking-[0.3em] text-white/60">final roster</p>
+                <div className="mt-6 space-y-3 rounded-3xl border border-white/10 bg-white/10 px-4 py-4 text-left sm:mt-8 sm:px-6">
+                    <p className="text-[0.7rem] uppercase tracking-[0.3em] text-white/60 sm:text-xs">final roster</p>
                     {players.map((player) => (
                         <div key={player.id} className="flex items-center justify-between text-sm font-semibold text-white">
                             <span>{player.name}</span>
@@ -59,7 +61,7 @@ export default function WinnerPhase() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-                <Button className="text-base" size="xl" onClick={handleNextRound} disabled={loading}>
+                <Button className="text-sm sm:text-base" size="xl" onClick={handleNextRound} disabled={loading}>
                     {loading ? (
                         <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -72,14 +74,14 @@ export default function WinnerPhase() {
                 <Button
                     variant="ghost"
                     size="xl"
-                    className="border border-white/25 text-base text-white/80 hover:text-white"
+                    className="border border-white/25 text-sm text-white/80 hover:text-white sm:text-base"
                     onClick={resetGame}
                     disabled={loading}
                 >
                     End session
                 </Button>
             </div>
-            <p className="text-xs text-slate-400/80">Next round keeps player names. Hit End Session to rebuild the lobby.</p>
+            <p className="text-[0.7rem] text-slate-400/80 sm:text-xs">Next round keeps player names. Hit End Session to rebuild the lobby.</p>
         </section>
     );
 }

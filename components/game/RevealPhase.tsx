@@ -26,8 +26,8 @@ export default function RevealPhase() {
     };
 
     return (
-        <section className="space-y-6 text-center">
-            <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-slate-300/60">
+        <section className="space-y-5 text-center sm:space-y-6">
+            <div className="flex items-center justify-between text-[0.55rem] uppercase tracking-[0.35em] text-slate-300/60 sm:text-xs">
                 <span>reveal order</span>
                 <span>
                     {currentIndex + 1}/{players.length}
@@ -40,11 +40,11 @@ export default function RevealPhase() {
                 />
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-900/40 p-8 shadow-2xl">
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-900/40 p-6 shadow-2xl sm:p-8">
                 <p className="retro-label text-[10px] text-cyan-200/80">PASS TO</p>
                 <h2 className="text-3xl font-semibold">{currentPlayer.name}</h2>
 
-                <div className="mt-8 min-h-[180px] rounded-2xl border border-white/10 bg-slate-950/60 px-6 py-8">
+                <div className="mt-6 min-h-[150px] rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-6 sm:mt-8 sm:px-6 sm:py-8">
                     {isRevealed ? (
                         <div className="space-y-4">
                             <p className="text-xs uppercase tracking-[0.3em] text-slate-400">your word</p>
@@ -66,10 +66,10 @@ export default function RevealPhase() {
                 </div>
             </div>
 
-            <Button className="w-full text-lg" size="xl" onClick={handleNext}>
+            <Button className="w-full text-sm sm:text-lg" size="xl" onClick={handleNext}>
                 {isRevealed ? (currentIndex < players.length - 1 ? "Next player" : "Enter clue round") : "Reveal word"}
             </Button>
-            <p className="text-xs text-slate-400/70">Keep eyes averted until it&apos;s your turn.</p>
+            <p className="text-[0.7rem] text-slate-400/70 sm:text-xs">Keep eyes averted until it&apos;s your turn.</p>
         </section>
     );
 }
