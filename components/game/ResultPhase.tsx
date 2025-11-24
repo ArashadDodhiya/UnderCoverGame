@@ -19,6 +19,14 @@ export default function ResultPhase() {
         }
     }, [lastEliminatedPlayer]);
 
+    // Play sound if impostor is eliminated
+    useMemo(() => {
+        if (lastEliminatedPlayer && (lastEliminatedPlayer.role === 'undercover' || lastEliminatedPlayer.role === 'mr_white')) {
+            const audio = new Audio('/sounds/undercover-detected.mp3');
+            audio.play().catch(e => console.error("Error playing sound:", e));
+        }
+    }, [lastEliminatedPlayer]);
+
     if (!lastEliminatedPlayer) {
         return (
             <div className="rounded-3xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-slate-300/80 sm:px-6 sm:py-12">
