@@ -9,12 +9,15 @@ export default function RevealPhase() {
     const { players, setPhase } = useGame();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isRevealed, setIsRevealed] = useState(false);
+    const [wordImage, setWordImage] = useState<{ url: string; alt: string; credit: { name: string; link: string } } | null>(null);
+    const [loadingImage, setLoadingImage] = useState(false);
     const currentPlayer = players[currentIndex];
     const progress = ((currentIndex + (isRevealed ? 1 : 0)) / players.length) * 100;
 
     const handleNext = () => {
         if (isRevealed) {
             setIsRevealed(false);
+            setWordImage(null); // Reset image
             if (currentIndex < players.length - 1) {
                 setCurrentIndex((prev) => prev + 1);
             } else {
@@ -22,6 +25,24 @@ export default function RevealPhase() {
             }
         } else {
             setIsRevealed(true);
+            if (currentPlayer.role !== "mr_white") {
+                fetchImage(currentPlayer.word);
+            }
+        }
+    };
+
+    const fetchImage = async (word: string) => {
+        setLoadingImage(true);
+        try {
+            const res = await fetch(`/api/get-word-image?query=${encodeURIComponent(word)}`);
+            if (res.ok) {
+                const data = await res.json();
+                setWordImage(data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch image", error);
+        } finally {
+            setLoadingImage(false);
         }
     };
 
@@ -51,6 +72,22 @@ export default function RevealPhase() {
                             <p className="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-fuchsia-300">
                                 {currentPlayer.role === "mr_white" ? "???" : currentPlayer.word}
                             </p>
+
+                            {wordImage && (
+                                <div className="relative mx-auto mt-4 h-48 w-full overflow-hidden rounded-xl sm:h-64">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={wordImage.url}
+                                        alt={wordImage.alt}
+                                        className="h-full w-full object-cover transition-opacity duration-500"
+                                    />
+                                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-1 text-[10px] text-white/70">
+                                        Photo by <a href={wordImage.credit.link} target="_blank" rel="noopener noreferrer" className="underline">{wordImage.credit.name}</a> on Unsplash
+                                    </div>
+                                </div>
+                            )}
+                            {loadingImage && <div className="text-xs text-slate-500">Loading visual...</div>}
+
                             <p className="text-sm text-slate-300/80">
                                 {currentPlayer.role === "mr_white" && "You are Mr. White. Improvise and stay calm."}
                                 {currentPlayer.role === "undercover" && "Undercover agent. Blend in and redirect suspicion."}
