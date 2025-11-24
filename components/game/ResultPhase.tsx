@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useGame } from "@/context/GameContext";
 import { Button } from "@/components/ui/button";
 
@@ -20,8 +20,10 @@ export default function ResultPhase() {
     }, [lastEliminatedPlayer]);
 
     // Play sound if impostor is eliminated
-    useMemo(() => {
+    // Play sound if impostor is eliminated
+    useEffect(() => {
         if (lastEliminatedPlayer && (lastEliminatedPlayer.role === 'undercover' || lastEliminatedPlayer.role === 'mr_white')) {
+            console.log("sound generate");
             const audio = new Audio('/sounds/undercover-detected.mp3');
             audio.play().catch(e => console.error("Error playing sound:", e));
         }
